@@ -10,968 +10,968 @@ servers:
   - url: https://api.anthropic.com
     description: Anthropic API server
 paths:
-  path: /v1/messages
-  method: post
-  servers:
-    - url: https://api.anthropic.com
-  request:
-    security: []
-    parameters:
-      path: {}
-      query: {}
-      header:
-        anthropic-beta:
-          schema:
-            - type: array
-              items:
-                allOf:
-                  - type: string
-              required: false
-              title: Anthropic-Beta
-              description: >-
-                Optional header to specify the beta version(s) you want to use.
-
-
-                To use multiple betas, use a comma separated list like
-                `beta1,beta2` or specify the header multiple times for each
-                beta.
-        anthropic-version:
-          schema:
-            - type: string
-              required: true
-              title: Anthropic-Version
-              description: >-
-                The version of the Claude API you want to use.
-
-
-                Read more about versioning and our version history
-                [here](https://docs.claude.com/en/api/versioning).
-        x-api-key:
-          schema:
-            - type: string
-              required: true
-              title: X-Api-Key
-              description: >-
-                Your unique API key for authentication.
-
-
-                This key is required in the header of all API requests, to
-                authenticate your account and access Anthropic's services. Get
-                your API key through the
-                [Console](https://console.anthropic.com/settings/keys). Each key
-                is scoped to a Workspace.
-      cookie: {}
-    body:
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              model:
-                allOf:
-                  - description: >-
-                      The model that will complete your prompt.
-
-
-                      See
-                      [models](https://docs.claude.com/en/docs/models-overview)
-                      for additional details and options.
-                    examples:
-                      - claude-sonnet-4-20250514
-                    maxLength: 256
-                    minLength: 1
-                    title: Model
-                    type: string
-              messages:
-                allOf:
-                  - description: >-
-                      Input messages.
-
-
-                      Our models are trained to operate on alternating `user`
-                      and `assistant` conversational turns. When creating a new
-                      `Message`, you specify the prior conversational turns with
-                      the `messages` parameter, and the model then generates the
-                      next `Message` in the conversation. Consecutive `user` or
-                      `assistant` turns in your request will be combined into a
-                      single turn.
-
-
-                      Each input message must be an object with a `role` and
-                      `content`. You can specify a single `user`-role message,
-                      or you can include multiple `user` and `assistant`
-                      messages.
-
-
-                      If the final message uses the `assistant` role, the
-                      response content will continue immediately from the
-                      content in that message. This can be used to constrain
-                      part of the model's response.
-
-
-                      Example with a single `user` message:
-
-
-                      ```json
-
-                      [{"role": "user", "content": "Hello, Claude"}]
-
-                      ```
-
-
-                      Example with multiple conversational turns:
-
-
-                      ```json
-
-                      [
-                        {"role": "user", "content": "Hello there."},
-                        {"role": "assistant", "content": "Hi, I'm Claude. How can I help you?"},
-                        {"role": "user", "content": "Can you explain LLMs in plain English?"},
-                      ]
-
-                      ```
-
-
-                      Example with a partially-filled response from Claude:
-
-
-                      ```json
-
-                      [
-                        {"role": "user", "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"},
-                        {"role": "assistant", "content": "The best answer is ("},
-                      ]
-
-                      ```
-
-
-                      Each input message `content` may be either a single
-                      `string` or an array of content blocks, where each block
-                      has a specific `type`. Using a `string` for `content` is
-                      shorthand for an array of one content block of type
-                      `"text"`. The following input messages are equivalent:
-
-
-                      ```json
-
-                      {"role": "user", "content": "Hello, Claude"}
-
-                      ```
-
-
-                      ```json
-
-                      {"role": "user", "content": [{"type": "text", "text":
-                      "Hello, Claude"}]}
-
-                      ```
-
-
-                      See [input
-                      examples](https://docs.claude.com/en/api/messages-examples).
-
-
-                      Note that if you want to include a [system
-                      prompt](https://docs.claude.com/en/docs/system-prompts),
-                      you can use the top-level `system` parameter — there is no
-                      `"system"` role for input messages in the Messages API.
-
-
-                      There is a limit of 100,000 messages in a single request.
-                    items:
-                      $ref: '#/components/schemas/InputMessage'
-                    title: Messages
-                    type: array
-              container:
-                allOf:
-                  - anyOf:
+  /v1/messages:
+    post:
+      servers:
+        - url: https://api.anthropic.com
+      request:
+        security: []
+        parameters:
+          path: {}
+          query: {}
+          header:
+            anthropic-beta:
+              schema:
+                - type: array
+                  items:
+                    allOf:
                       - type: string
-                      - type: 'null'
-                    description: Container identifier for reuse across requests.
-                    title: Container
-              context_management:
-                allOf:
-                  - anyOf:
-                      - $ref: '#/components/schemas/ContextManagementConfig'
-                      - type: 'null'
-                    description: >-
-                      Context management configuration.
+                  required: false
+                  title: Anthropic-Beta
+                  description: >-
+                    Optional header to specify the beta version(s) you want to use.
 
 
-                      This allows you to control how Claude manages context
-                      across multiple requests, such as whether to clear
-                      function results or not.
-              max_tokens:
-                allOf:
-                  - description: >-
-                      The maximum number of tokens to generate before stopping.
+                    To use multiple betas, use a comma separated list like
+                    `beta1,beta2` or specify the header multiple times for each
+                    beta.
+            anthropic-version:
+              schema:
+                - type: string
+                  required: true
+                  title: Anthropic-Version
+                  description: >-
+                    The version of the Claude API you want to use.
 
 
-                      Note that our models may stop _before_ reaching this
-                      maximum. This parameter only specifies the absolute
-                      maximum number of tokens to generate.
+                    Read more about versioning and our version history
+                    [here](https://docs.claude.com/en/api/versioning).
+            x-api-key:
+              schema:
+                - type: string
+                  required: true
+                  title: X-Api-Key
+                  description: >-
+                    Your unique API key for authentication.
 
 
-                      Different models have different maximum values for this
-                      parameter.  See
-                      [models](https://docs.claude.com/en/docs/models-overview)
-                      for details.
-                    examples:
-                      - 1024
-                    minimum: 1
-                    title: Max Tokens
-                    type: integer
-              mcp_servers:
-                allOf:
-                  - description: MCP servers to be utilized in this request
-                    items:
-                      $ref: '#/components/schemas/RequestMCPServerURLDefinition'
-                    maxItems: 20
-                    title: Mcp Servers
-                    type: array
-              metadata:
-                allOf:
-                  - $ref: '#/components/schemas/Metadata'
-                    description: An object describing metadata about the request.
-              service_tier:
-                allOf:
-                  - description: >-
-                      Determines whether to use priority capacity (if available)
-                      or standard capacity for this request.
+                    This key is required in the header of all API requests, to
+                    authenticate your account and access Anthropic's services. Get
+                    your API key through the
+                    [Console](https://console.anthropic.com/settings/keys). Each key
+                    is scoped to a Workspace.
+          cookie: {}
+        body:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model:
+                  allOf:
+                    - description: >-
+                        The model that will complete your prompt.
 
 
-                      Anthropic offers different levels of service for your API
-                      requests. See
-                      [service-tiers](https://docs.claude.com/en/api/service-tiers)
-                      for details.
-                    enum:
-                      - auto
-                      - standard_only
-                    title: Service Tier
-                    type: string
-              stop_sequences:
-                allOf:
-                  - description: >-
-                      Custom text sequences that will cause the model to stop
-                      generating.
-
-
-                      Our models will normally stop when they have naturally
-                      completed their turn, which will result in a response
-                      `stop_reason` of `"end_turn"`.
-
-
-                      If you want the model to stop generating when it
-                      encounters custom strings of text, you can use the
-                      `stop_sequences` parameter. If the model encounters one of
-                      the custom sequences, the response `stop_reason` value
-                      will be `"stop_sequence"` and the response `stop_sequence`
-                      value will contain the matched stop sequence.
-                    items:
+                        See
+                        [models](https://docs.claude.com/en/docs/models-overview)
+                        for additional details and options.
+                      examples:
+                        - claude-sonnet-4-20250514
+                      maxLength: 256
+                      minLength: 1
+                      title: Model
                       type: string
-                    title: Stop Sequences
-                    type: array
-              stream:
-                allOf:
-                  - description: >-
-                      Whether to incrementally stream the response using
-                      server-sent events.
-
-
-                      See
-                      [streaming](https://docs.claude.com/en/api/messages-streaming)
-                      for details.
-                    title: Stream
-                    type: boolean
-              system:
-                allOf:
-                  - anyOf:
-                      - type: string
-                      - items:
-                          $ref: '#/components/schemas/RequestTextBlock'
-                        type: array
-                    description: >-
-                      System prompt.
-
-
-                      A system prompt is a way of providing context and
-                      instructions to Claude, such as specifying a particular
-                      goal or role. See our [guide to system
-                      prompts](https://docs.claude.com/en/docs/system-prompts).
-                    examples:
-                      - - text: Today's date is 2024-06-01.
-                          type: text
-                      - Today's date is 2023-01-01.
-                    title: System
-              temperature:
-                allOf:
-                  - description: >-
-                      Amount of randomness injected into the response.
-
-
-                      Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use
-                      `temperature` closer to `0.0` for analytical / multiple
-                      choice, and closer to `1.0` for creative and generative
-                      tasks.
-
-
-                      Note that even with `temperature` of `0.0`, the results
-                      will not be fully deterministic.
-                    examples:
-                      - 1
-                    maximum: 1
-                    minimum: 0
-                    title: Temperature
-                    type: number
-              thinking:
-                allOf:
-                  - description: >-
-                      Configuration for enabling Claude's extended thinking. 
-
-
-                      When enabled, responses include `thinking` content blocks
-                      showing Claude's thinking process before the final answer.
-                      Requires a minimum budget of 1,024 tokens and counts
-                      towards your `max_tokens` limit.
-
-
-                      See [extended
-                      thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
-                      for details.
-                    discriminator:
-                      mapping:
-                        disabled: '#/components/schemas/ThinkingConfigDisabled'
-                        enabled: '#/components/schemas/ThinkingConfigEnabled'
-                      propertyName: type
-                    oneOf:
-                      - $ref: '#/components/schemas/ThinkingConfigEnabled'
-                      - $ref: '#/components/schemas/ThinkingConfigDisabled'
-              tool_choice:
-                allOf:
-                  - description: >-
-                      How the model should use the provided tools. The model can
-                      use a specific tool, any available tool, decide by itself,
-                      or not use tools at all.
-                    discriminator:
-                      mapping:
-                        any: '#/components/schemas/ToolChoiceAny'
-                        auto: '#/components/schemas/ToolChoiceAuto'
-                        none: '#/components/schemas/ToolChoiceNone'
-                        tool: '#/components/schemas/ToolChoiceTool'
-                      propertyName: type
-                    oneOf:
-                      - $ref: '#/components/schemas/ToolChoiceAuto'
-                      - $ref: '#/components/schemas/ToolChoiceAny'
-                      - $ref: '#/components/schemas/ToolChoiceTool'
-                      - $ref: '#/components/schemas/ToolChoiceNone'
-              tools:
-                allOf:
-                  - description: >-
-                      Definitions of tools that the model may use.
-
-
-                      If you include `tools` in your API request, the model may
-                      return `tool_use` content blocks that represent the
-                      model's use of those tools. You can then run those tools
-                      using the tool input generated by the model and then
-                      optionally return results back to the model using
-                      `tool_result` content blocks.
+                messages:
+                  allOf:
+                    - description: >-
+                        Input messages.
 
 
-                      There are two types of tools: **client tools** and
-                      **server tools**. The behavior described below applies to
-                      client tools. For [server
-                      tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
-                      see their individual documentation as each has its own
-                      behavior (e.g., the [web search
-                      tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+                        Our models are trained to operate on alternating `user`
+                        and `assistant` conversational turns. When creating a new
+                        `Message`, you specify the prior conversational turns with
+                        the `messages` parameter, and the model then generates the
+                        next `Message` in the conversation. Consecutive `user` or
+                        `assistant` turns in your request will be combined into a
+                        single turn.
 
 
-                      Each tool definition includes:
+                        Each input message must be an object with a `role` and
+                        `content`. You can specify a single `user`-role message,
+                        or you can include multiple `user` and `assistant`
+                        messages.
 
 
-                      * `name`: Name of the tool.
+                        If the final message uses the `assistant` role, the
+                        response content will continue immediately from the
+                        content in that message. This can be used to constrain
+                        part of the model's response.
 
-                      * `description`: Optional, but strongly-recommended
-                      description of the tool.
-
-                      * `input_schema`: [JSON
-                      schema](https://json-schema.org/draft/2020-12) for the
-                      tool `input` shape that the model will produce in
-                      `tool_use` output content blocks.
-
-
-                      For example, if you defined `tools` as:
-
-
-                      ```json
-
-                      [
-                        {
-                          "name": "get_stock_price",
-                          "description": "Get the current stock price for a given ticker symbol.",
-                          "input_schema": {
-                            "type": "object",
-                            "properties": {
-                              "ticker": {
-                                "type": "string",
-                                "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-                              }
-                            },
-                            "required": ["ticker"]
-                          }
-                        }
-                      ]
-
-                      ```
-
-
-                      And then asked the model "What's the S&P 500 at today?",
-                      the model might produce `tool_use` content blocks in the
-                      response like this:
-
-
-                      ```json
-
-                      [
-                        {
-                          "type": "tool_use",
-                          "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-                          "name": "get_stock_price",
-                          "input": { "ticker": "^GSPC" }
-                        }
-                      ]
-
-                      ```
-
-
-                      You might then run your `get_stock_price` tool with
-                      `{"ticker": "^GSPC"}` as an input, and return the
-                      following back to the model in a subsequent `user`
-                      message:
-
-
-                      ```json
-
-                      [
-                        {
-                          "type": "tool_result",
-                          "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-                          "content": "259.75 USD"
-                        }
-                      ]
-
-                      ```
-
-
-                      Tools can be used for workflows that include running
-                      client-side tools and functions, or more generally
-                      whenever you want the model to produce a particular JSON
-                      structure of output.
-
-
-                      See our [guide](https://docs.claude.com/en/docs/tool-use)
-                      for more details.
-                    examples:
-                      - description: Get the current weather in a given location
-                        input_schema:
-                          properties:
-                            location:
-                              description: The city and state, e.g. San Francisco, CA
-                              type: string
-                            unit:
-                              description: >-
-                                Unit for the output - one of (celsius,
-                                fahrenheit)
-                              type: string
-                          required:
-                            - location
-                          type: object
-                        name: get_weather
-                    items:
-                      oneOf:
-                        - $ref: '#/components/schemas/Tool'
-                        - $ref: '#/components/schemas/BashTool_20241022'
-                        - $ref: '#/components/schemas/BashTool_20250124'
-                        - $ref: '#/components/schemas/CodeExecutionTool_20250522'
-                        - $ref: '#/components/schemas/CodeExecutionTool_20250825'
-                        - $ref: '#/components/schemas/ComputerUseTool_20241022'
-                        - $ref: '#/components/schemas/MemoryTool_20250818'
-                        - $ref: '#/components/schemas/ComputerUseTool_20250124'
-                        - $ref: '#/components/schemas/TextEditor_20241022'
-                        - $ref: '#/components/schemas/TextEditor_20250124'
-                        - $ref: '#/components/schemas/TextEditor_20250429'
-                        - $ref: '#/components/schemas/TextEditor_20250728'
-                        - $ref: '#/components/schemas/WebSearchTool_20250305'
-                        - $ref: '#/components/schemas/WebFetchTool_20250910'
-                    title: Tools
-                    type: array
-              top_k:
-                allOf:
-                  - description: >-
-                      Only sample from the top K options for each subsequent
-                      token.
-
-
-                      Used to remove "long tail" low probability responses.
-                      [Learn more technical details
-                      here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
-
-
-                      Recommended for advanced use cases only. You usually only
-                      need to use `temperature`.
-                    examples:
-                      - 5
-                    minimum: 0
-                    title: Top K
-                    type: integer
-              top_p:
-                allOf:
-                  - description: >-
-                      Use nucleus sampling.
-
-
-                      In nucleus sampling, we compute the cumulative
-                      distribution over all the options for each subsequent
-                      token in decreasing probability order and cut it off once
-                      it reaches a particular probability specified by `top_p`.
-                      You should either alter `temperature` or `top_p`, but not
-                      both.
-
-
-                      Recommended for advanced use cases only. You usually only
-                      need to use `temperature`.
-                    examples:
-                      - 0.7
-                    maximum: 1
-                    minimum: 0
-                    title: Top P
-                    type: number
-            required: true
-            title: CreateMessageParams
-            refIdentifier: '#/components/schemas/CreateMessageParams'
-            requiredProperties:
-              - model
-              - messages
-              - max_tokens
-            additionalProperties: false
-            example:
-              max_tokens: 1024
-              messages:
-                - content: Hello, world
-                  role: user
-              model: claude-sonnet-4-20250514
-        examples:
-          example:
-            value:
-              max_tokens: 1024
-              messages:
-                - content: Hello, world
-                  role: user
-              model: claude-sonnet-4-20250514
-    codeSamples:
-      - lang: bash
-        source: |-
-          curl https://api.anthropic.com/v1/messages \
-               --header "x-api-key: $ANTHROPIC_API_KEY" \
-               --header "anthropic-version: 2023-06-01" \
-               --header "content-type: application/json" \
-               --data \
-          '{
-              "model": "claude-sonnet-4-20250514",
-              "max_tokens": 1024,
-              "messages": [
-                  {"role": "user", "content": "Hello, world"}
-              ]
-          }'
-      - lang: python
-        source: |-
-          import anthropic
-
-          anthropic.Anthropic().messages.create(
-              model="claude-sonnet-4-20250514",
-              max_tokens=1024,
-              messages=[
-                  {"role": "user", "content": "Hello, world"}
-              ]
-          )
-      - lang: javascript
-        source: |-
-          import { Anthropic } from '@anthropic-ai/sdk';
-
-          const anthropic = new Anthropic();
-
-          await anthropic.messages.create({
-            model: "claude-sonnet-4-20250514",
-            max_tokens: 1024,
-            messages: [
-              {"role": "user", "content": "Hello, world"}
-            ]
-          });
-  response:
-    '200':
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              id:
-                allOf:
-                  - description: |-
-                      Unique object identifier.
-
-                      The format and length of IDs may change over time.
-                    examples:
-                      - msg_013Zva2CMHLNnXjNJJKqJ2EF
-                    title: Id
-                    type: string
-              type:
-                allOf:
-                  - const: message
-                    default: message
-                    description: |-
-                      Object type.
-
-                      For Messages, this is always `"message"`.
-                    enum:
-                      - message
-                    title: Type
-                    type: string
-              role:
-                allOf:
-                  - const: assistant
-                    default: assistant
-                    description: |-
-                      Conversational role of the generated message.
-
-                      This will always be `"assistant"`.
-                    enum:
-                      - assistant
-                    title: Role
-                    type: string
-              content:
-                allOf:
-                  - description: >-
-                      Content generated by the model.
-
-
-                      This is an array of content blocks, each of which has a
-                      `type` that determines its shape.
-
-
-                      Example:
-
-
-                      ```json
-
-                      [{"type": "text", "text": "Hi, I'm Claude."}]
-
-                      ```
-
-
-                      If the request input `messages` ended with an `assistant`
-                      turn, then the response `content` will continue directly
-                      from that last turn. You can use this to constrain the
-                      model's output.
-
-
-                      For example, if the input `messages` were:
-
-                      ```json
-
-                      [
-                        {"role": "user", "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"},
-                        {"role": "assistant", "content": "The best answer is ("}
-                      ]
-
-                      ```
-
-
-                      Then the response `content` might be:
-
-
-                      ```json
-
-                      [{"type": "text", "text": "B)"}]
-
-                      ```
-                    examples:
-                      - - citations: null
-                          text: Hi! My name is Claude.
-                          type: text
-                    items:
+
+                        Example with a single `user` message:
+
+
+                        ```json
+
+                        [{"role": "user", "content": "Hello, Claude"}]
+
+                        ```
+
+
+                        Example with multiple conversational turns:
+
+
+                        ```json
+
+                        [
+                          {"role": "user", "content": "Hello there."},
+                          {"role": "assistant", "content": "Hi, I'm Claude. How can I help you?"},
+                          {"role": "user", "content": "Can you explain LLMs in plain English?"},
+                        ]
+
+                        ```
+
+
+                        Example with a partially-filled response from Claude:
+
+
+                        ```json
+
+                        [
+                          {"role": "user", "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"},
+                          {"role": "assistant", "content": "The best answer is ("},
+                        ]
+
+                        ```
+
+
+                        Each input message `content` may be either a single
+                        `string` or an array of content blocks, where each block
+                        has a specific `type`. Using a `string` for `content` is
+                        shorthand for an array of one content block of type
+                        `"text"`. The following input messages are equivalent:
+
+
+                        ```json
+
+                        {"role": "user", "content": "Hello, Claude"}
+
+                        ```
+
+
+                        ```json
+
+                        {"role": "user", "content": [{"type": "text", "text":
+                        "Hello, Claude"}]}
+
+                        ```
+
+
+                        See [input
+                        examples](https://docs.claude.com/en/api/messages-examples).
+
+
+                        Note that if you want to include a [system
+                        prompt](https://docs.claude.com/en/docs/system-prompts),
+                        you can use the top-level `system` parameter — there is no
+                        `"system"` role for input messages in the Messages API.
+
+
+                        There is a limit of 100,000 messages in a single request.
+                      items:
+                        $ref: '#/components/schemas/InputMessage'
+                      title: Messages
+                      type: array
+                container:
+                  allOf:
+                    - anyOf:
+                        - type: string
+                        - type: 'null'
+                      description: Container identifier for reuse across requests.
+                      title: Container
+                context_management:
+                  allOf:
+                    - anyOf:
+                        - $ref: '#/components/schemas/ContextManagementConfig'
+                        - type: 'null'
+                      description: >-
+                        Context management configuration.
+
+
+                        This allows you to control how Claude manages context
+                        across multiple requests, such as whether to clear
+                        function results or not.
+                max_tokens:
+                  allOf:
+                    - description: >-
+                        The maximum number of tokens to generate before stopping.
+
+
+                        Note that our models may stop _before_ reaching this
+                        maximum. This parameter only specifies the absolute
+                        maximum number of tokens to generate.
+
+
+                        Different models have different maximum values for this
+                        parameter.  See
+                        [models](https://docs.claude.com/en/docs/models-overview)
+                        for details.
+                      examples:
+                        - 1024
+                      minimum: 1
+                      title: Max Tokens
+                      type: integer
+                mcp_servers:
+                  allOf:
+                    - description: MCP servers to be utilized in this request
+                      items:
+                        $ref: '#/components/schemas/RequestMCPServerURLDefinition'
+                      maxItems: 20
+                      title: Mcp Servers
+                      type: array
+                metadata:
+                  allOf:
+                    - $ref: '#/components/schemas/Metadata'
+                      description: An object describing metadata about the request.
+                service_tier:
+                  allOf:
+                    - description: >-
+                        Determines whether to use priority capacity (if available)
+                        or standard capacity for this request.
+
+
+                        Anthropic offers different levels of service for your API
+                        requests. See
+                        [service-tiers](https://docs.claude.com/en/api/service-tiers)
+                        for details.
+                      enum:
+                        - auto
+                        - standard_only
+                      title: Service Tier
+                      type: string
+                stop_sequences:
+                  allOf:
+                    - description: >-
+                        Custom text sequences that will cause the model to stop
+                        generating.
+
+
+                        Our models will normally stop when they have naturally
+                        completed their turn, which will result in a response
+                        `stop_reason` of `"end_turn"`.
+
+
+                        If you want the model to stop generating when it
+                        encounters custom strings of text, you can use the
+                        `stop_sequences` parameter. If the model encounters one of
+                        the custom sequences, the response `stop_reason` value
+                        will be `"stop_sequence"` and the response `stop_sequence`
+                        value will contain the matched stop sequence.
+                      items:
+                        type: string
+                      title: Stop Sequences
+                      type: array
+                stream:
+                  allOf:
+                    - description: >-
+                        Whether to incrementally stream the response using
+                        server-sent events.
+
+
+                        See
+                        [streaming](https://docs.claude.com/en/api/messages-streaming)
+                        for details.
+                      title: Stream
+                      type: boolean
+                system:
+                  allOf:
+                    - anyOf:
+                        - type: string
+                        - items:
+                            $ref: '#/components/schemas/RequestTextBlock'
+                          type: array
+                      description: >-
+                        System prompt.
+
+
+                        A system prompt is a way of providing context and
+                        instructions to Claude, such as specifying a particular
+                        goal or role. See our [guide to system
+                        prompts](https://docs.claude.com/en/docs/system-prompts).
+                      examples:
+                        - - text: Today's date is 2024-06-01.
+                            type: text
+                        - Today's date is 2023-01-01.
+                      title: System
+                temperature:
+                  allOf:
+                    - description: >-
+                        Amount of randomness injected into the response.
+
+
+                        Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use
+                        `temperature` closer to `0.0` for analytical / multiple
+                        choice, and closer to `1.0` for creative and generative
+                        tasks.
+
+
+                        Note that even with `temperature` of `0.0`, the results
+                        will not be fully deterministic.
+                      examples:
+                        - 1
+                      maximum: 1
+                      minimum: 0
+                      title: Temperature
+                      type: number
+                thinking:
+                  allOf:
+                    - description: >-
+                        Configuration for enabling Claude's extended thinking. 
+
+
+                        When enabled, responses include `thinking` content blocks
+                        showing Claude's thinking process before the final answer.
+                        Requires a minimum budget of 1,024 tokens and counts
+                        towards your `max_tokens` limit.
+
+
+                        See [extended
+                        thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
+                        for details.
                       discriminator:
                         mapping:
-                          bash_code_execution_tool_result: >-
-                            #/components/schemas/ResponseBashCodeExecutionToolResultBlock
-                          code_execution_tool_result: >-
-                            #/components/schemas/ResponseCodeExecutionToolResultBlock
-                          container_upload: '#/components/schemas/ResponseContainerUploadBlock'
-                          mcp_tool_result: '#/components/schemas/ResponseMCPToolResultBlock'
-                          mcp_tool_use: '#/components/schemas/ResponseMCPToolUseBlock'
-                          redacted_thinking: '#/components/schemas/ResponseRedactedThinkingBlock'
-                          server_tool_use: '#/components/schemas/ResponseServerToolUseBlock'
-                          text: '#/components/schemas/ResponseTextBlock'
-                          text_editor_code_execution_tool_result: >-
-                            #/components/schemas/ResponseTextEditorCodeExecutionToolResultBlock
-                          thinking: '#/components/schemas/ResponseThinkingBlock'
-                          tool_use: '#/components/schemas/ResponseToolUseBlock'
-                          web_fetch_tool_result: '#/components/schemas/ResponseWebFetchToolResultBlock'
-                          web_search_tool_result: >-
-                            #/components/schemas/ResponseWebSearchToolResultBlock
+                          disabled: '#/components/schemas/ThinkingConfigDisabled'
+                          enabled: '#/components/schemas/ThinkingConfigEnabled'
                         propertyName: type
                       oneOf:
-                        - $ref: '#/components/schemas/ResponseTextBlock'
-                        - $ref: '#/components/schemas/ResponseThinkingBlock'
-                        - $ref: '#/components/schemas/ResponseRedactedThinkingBlock'
-                        - $ref: '#/components/schemas/ResponseToolUseBlock'
-                        - $ref: '#/components/schemas/ResponseServerToolUseBlock'
-                        - $ref: >-
-                            #/components/schemas/ResponseWebSearchToolResultBlock
-                        - $ref: '#/components/schemas/ResponseWebFetchToolResultBlock'
-                        - $ref: >-
-                            #/components/schemas/ResponseCodeExecutionToolResultBlock
-                        - $ref: >-
-                            #/components/schemas/ResponseBashCodeExecutionToolResultBlock
-                        - $ref: >-
-                            #/components/schemas/ResponseTextEditorCodeExecutionToolResultBlock
-                        - $ref: '#/components/schemas/ResponseMCPToolUseBlock'
-                        - $ref: '#/components/schemas/ResponseMCPToolResultBlock'
-                        - $ref: '#/components/schemas/ResponseContainerUploadBlock'
-                    title: Content
-                    type: array
-              model:
-                allOf:
-                  - description: The model that handled the request.
-                    examples:
-                      - claude-sonnet-4-20250514
-                    maxLength: 256
-                    minLength: 1
-                    title: Model
-                    type: string
-              stop_reason:
-                allOf:
-                  - anyOf:
-                      - enum:
-                          - end_turn
-                          - max_tokens
-                          - stop_sequence
-                          - tool_use
-                          - pause_turn
-                          - refusal
-                          - model_context_window_exceeded
-                        type: string
-                      - type: 'null'
-                    description: >-
-                      The reason that we stopped.
+                        - $ref: '#/components/schemas/ThinkingConfigEnabled'
+                        - $ref: '#/components/schemas/ThinkingConfigDisabled'
+                tool_choice:
+                  allOf:
+                    - description: >-
+                        How the model should use the provided tools. The model can
+                        use a specific tool, any available tool, decide by itself,
+                        or not use tools at all.
+                      discriminator:
+                        mapping:
+                          any: '#/components/schemas/ToolChoiceAny'
+                          auto: '#/components/schemas/ToolChoiceAuto'
+                          none: '#/components/schemas/ToolChoiceNone'
+                          tool: '#/components/schemas/ToolChoiceTool'
+                        propertyName: type
+                      oneOf:
+                        - $ref: '#/components/schemas/ToolChoiceAuto'
+                        - $ref: '#/components/schemas/ToolChoiceAny'
+                        - $ref: '#/components/schemas/ToolChoiceTool'
+                        - $ref: '#/components/schemas/ToolChoiceNone'
+                tools:
+                  allOf:
+                    - description: >-
+                        Definitions of tools that the model may use.
 
 
-                      This may be one the following values:
-
-                      * `"end_turn"`: the model reached a natural stopping point
-
-                      * `"max_tokens"`: we exceeded the requested `max_tokens`
-                      or the model's maximum
-
-                      * `"stop_sequence"`: one of your provided custom
-                      `stop_sequences` was generated
-
-                      * `"tool_use"`: the model invoked one or more tools
-
-                      * `"pause_turn"`: we paused a long-running turn. You may
-                      provide the response back as-is in a subsequent request to
-                      let the model continue.
-
-                      * `"refusal"`: when streaming classifiers intervene to
-                      handle potential policy violations
+                        If you include `tools` in your API request, the model may
+                        return `tool_use` content blocks that represent the
+                        model's use of those tools. You can then run those tools
+                        using the tool input generated by the model and then
+                        optionally return results back to the model using
+                        `tool_result` content blocks.
 
 
-                      In non-streaming mode this value is always non-null. In
-                      streaming mode, it is null in the `message_start` event
-                      and non-null otherwise.
-                    title: Stop Reason
-              stop_sequence:
-                allOf:
-                  - anyOf:
-                      - type: string
-                      - type: 'null'
-                    default: null
-                    description: >-
-                      Which custom stop sequence was generated, if any.
+                        There are two types of tools: **client tools** and
+                        **server tools**. The behavior described below applies to
+                        client tools. For [server
+                        tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
+                        see their individual documentation as each has its own
+                        behavior (e.g., the [web search
+                        tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
 
 
-                      This value will be a non-null string if one of your custom
-                      stop sequences was generated.
-                    title: Stop Sequence
-              usage:
-                allOf:
-                  - $ref: '#/components/schemas/Usage'
-                    description: >-
-                      Billing and rate-limit usage.
+                        Each tool definition includes:
 
 
-                      Anthropic's API bills and rate-limits by token counts, as
-                      tokens represent the underlying cost to our systems.
+                        * `name`: Name of the tool.
+
+                        * `description`: Optional, but strongly-recommended
+                        description of the tool.
+
+                        * `input_schema`: [JSON
+                        schema](https://json-schema.org/draft/2020-12) for the
+                        tool `input` shape that the model will produce in
+                        `tool_use` output content blocks.
 
 
-                      Under the hood, the API transforms requests into a format
-                      suitable for the model. The model's output then goes
-                      through a parsing stage before becoming an API response.
-                      As a result, the token counts in `usage` will not match
-                      one-to-one with the exact visible content of an API
-                      request or response.
+                        For example, if you defined `tools` as:
 
 
-                      For example, `output_tokens` will be non-zero, even for an
-                      empty string response from Claude.
+                        ```json
+
+                        [
+                          {
+                            "name": "get_stock_price",
+                            "description": "Get the current stock price for a given ticker symbol.",
+                            "input_schema": {
+                              "type": "object",
+                              "properties": {
+                                "ticker": {
+                                  "type": "string",
+                                  "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
+                                }
+                              },
+                              "required": ["ticker"]
+                            }
+                          }
+                        ]
+
+                        ```
 
 
-                      Total input tokens in a request is the summation of
-                      `input_tokens`, `cache_creation_input_tokens`, and
-                      `cache_read_input_tokens`.
-                    examples:
-                      - input_tokens: 2095
-                        output_tokens: 503
-              context_management:
-                allOf:
-                  - anyOf:
-                      - $ref: '#/components/schemas/ResponseContextManagement'
-                      - type: 'null'
-                    default: null
-                    description: >-
-                      Information about context management strategies applied
-                      during the request
-              container:
-                allOf:
-                  - anyOf:
-                      - $ref: '#/components/schemas/Container'
-                      - type: 'null'
-                    default: null
-                    description: >-
-                      Information about the container used in this request.
+                        And then asked the model "What's the S&P 500 at today?",
+                        the model might produce `tool_use` content blocks in the
+                        response like this:
 
 
-                      This will be non-null if a container tool (e.g. code
-                      execution) was used.
-            title: Message
-            refIdentifier: '#/components/schemas/Message'
-            examples:
-              - content: &ref_0
-                  - citations: null
-                    text: Hi! My name is Claude.
-                    type: text
-                id: msg_013Zva2CMHLNnXjNJJKqJ2EF
+                        ```json
+
+                        [
+                          {
+                            "type": "tool_use",
+                            "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+                            "name": "get_stock_price",
+                            "input": { "ticker": "^GSPC" }
+                          }
+                        ]
+
+                        ```
+
+
+                        You might then run your `get_stock_price` tool with
+                        `{"ticker": "^GSPC"}` as an input, and return the
+                        following back to the model in a subsequent `user`
+                        message:
+
+
+                        ```json
+
+                        [
+                          {
+                            "type": "tool_result",
+                            "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+                            "content": "259.75 USD"
+                          }
+                        ]
+
+                        ```
+
+
+                        Tools can be used for workflows that include running
+                        client-side tools and functions, or more generally
+                        whenever you want the model to produce a particular JSON
+                        structure of output.
+
+
+                        See our [guide](https://docs.claude.com/en/docs/tool-use)
+                        for more details.
+                      examples:
+                        - description: Get the current weather in a given location
+                          input_schema:
+                            properties:
+                              location:
+                                description: The city and state, e.g. San Francisco, CA
+                                type: string
+                              unit:
+                                description: >-
+                                  Unit for the output - one of (celsius,
+                                  fahrenheit)
+                                type: string
+                            required:
+                              - location
+                            type: object
+                          name: get_weather
+                      items:
+                        oneOf:
+                          - $ref: '#/components/schemas/Tool'
+                          - $ref: '#/components/schemas/BashTool_20241022'
+                          - $ref: '#/components/schemas/BashTool_20250124'
+                          - $ref: '#/components/schemas/CodeExecutionTool_20250522'
+                          - $ref: '#/components/schemas/CodeExecutionTool_20250825'
+                          - $ref: '#/components/schemas/ComputerUseTool_20241022'
+                          - $ref: '#/components/schemas/MemoryTool_20250818'
+                          - $ref: '#/components/schemas/ComputerUseTool_20250124'
+                          - $ref: '#/components/schemas/TextEditor_20241022'
+                          - $ref: '#/components/schemas/TextEditor_20250124'
+                          - $ref: '#/components/schemas/TextEditor_20250429'
+                          - $ref: '#/components/schemas/TextEditor_20250728'
+                          - $ref: '#/components/schemas/WebSearchTool_20250305'
+                          - $ref: '#/components/schemas/WebFetchTool_20250910'
+                      title: Tools
+                      type: array
+                top_k:
+                  allOf:
+                    - description: >-
+                        Only sample from the top K options for each subsequent
+                        token.
+
+
+                        Used to remove "long tail" low probability responses.
+                        [Learn more technical details
+                        here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
+
+
+                        Recommended for advanced use cases only. You usually only
+                        need to use `temperature`.
+                      examples:
+                        - 5
+                      minimum: 0
+                      title: Top K
+                      type: integer
+                top_p:
+                  allOf:
+                    - description: >-
+                        Use nucleus sampling.
+
+
+                        In nucleus sampling, we compute the cumulative
+                        distribution over all the options for each subsequent
+                        token in decreasing probability order and cut it off once
+                        it reaches a particular probability specified by `top_p`.
+                        You should either alter `temperature` or `top_p`, but not
+                        both.
+
+
+                        Recommended for advanced use cases only. You usually only
+                        need to use `temperature`.
+                      examples:
+                        - 0.7
+                      maximum: 1
+                      minimum: 0
+                      title: Top P
+                      type: number
+              required: true
+              title: CreateMessageParams
+              refIdentifier: '#/components/schemas/CreateMessageParams'
+              requiredProperties:
+                - model
+                - messages
+                - max_tokens
+              additionalProperties: false
+              example:
+                max_tokens: 1024
+                messages:
+                  - content: Hello, world
+                    role: user
                 model: claude-sonnet-4-20250514
-                role: assistant
-                stop_reason: end_turn
-                stop_sequence: null
-                type: message
-                usage: &ref_1
-                  input_tokens: 2095
-                  output_tokens: 503
-            requiredProperties:
-              - id
-              - type
-              - role
-              - content
-              - model
-              - stop_reason
-              - stop_sequence
-              - usage
-              - context_management
-              - container
-            example:
-              content: *ref_0
-              id: msg_013Zva2CMHLNnXjNJJKqJ2EF
-              model: claude-sonnet-4-20250514
-              role: assistant
-              stop_reason: end_turn
-              stop_sequence: null
-              type: message
-              usage: *ref_1
-        examples:
-          example:
-            value:
-              content:
-                - citations: null
-                  text: Hi! My name is Claude.
-                  type: text
-              id: msg_013Zva2CMHLNnXjNJJKqJ2EF
-              model: claude-sonnet-4-20250514
-              role: assistant
-              stop_reason: end_turn
-              stop_sequence: null
-              type: message
-              usage:
-                input_tokens: 2095
-                output_tokens: 503
-        description: Message object.
-    4XX:
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              error:
-                allOf:
-                  - discriminator:
-                      mapping:
-                        api_error: '#/components/schemas/APIError'
-                        authentication_error: '#/components/schemas/AuthenticationError'
-                        billing_error: '#/components/schemas/BillingError'
-                        invalid_request_error: '#/components/schemas/InvalidRequestError'
-                        not_found_error: '#/components/schemas/NotFoundError'
-                        overloaded_error: '#/components/schemas/OverloadedError'
-                        permission_error: '#/components/schemas/PermissionError'
-                        rate_limit_error: '#/components/schemas/RateLimitError'
-                        timeout_error: '#/components/schemas/GatewayTimeoutError'
-                      propertyName: type
-                    oneOf:
-                      - $ref: '#/components/schemas/InvalidRequestError'
-                      - $ref: '#/components/schemas/AuthenticationError'
-                      - $ref: '#/components/schemas/BillingError'
-                      - $ref: '#/components/schemas/PermissionError'
-                      - $ref: '#/components/schemas/NotFoundError'
-                      - $ref: '#/components/schemas/RateLimitError'
-                      - $ref: '#/components/schemas/GatewayTimeoutError'
-                      - $ref: '#/components/schemas/APIError'
-                      - $ref: '#/components/schemas/OverloadedError'
-                    title: Error
-              request_id:
-                allOf:
-                  - anyOf:
-                      - type: string
-                      - type: 'null'
-                    default: null
-                    title: Request Id
-              type:
-                allOf:
-                  - const: error
-                    default: error
-                    enum:
-                      - error
-                    title: Type
-                    type: string
-            title: ErrorResponse
-            refIdentifier: '#/components/schemas/ErrorResponse'
-            requiredProperties:
-              - error
-              - request_id
-              - type
-        examples:
-          example:
-            value:
-              error:
-                message: Invalid request
-                type: invalid_request_error
-              request_id: <string>
-              type: error
-        description: >-
-          Error response.
+            examples:
+              example:
+                value:
+                  max_tokens: 1024
+                  messages:
+                    - content: Hello, world
+                      role: user
+                  model: claude-sonnet-4-20250514
+        codeSamples:
+          - lang: bash
+            source: |-
+              curl https://api.anthropic.com/v1/messages \
+                   --header "x-api-key: $ANTHROPIC_API_KEY" \
+                   --header "anthropic-version: 2023-06-01" \
+                   --header "content-type: application/json" \
+                   --data \
+              '{
+                  "model": "claude-sonnet-4-20250514",
+                  "max_tokens": 1024,
+                  "messages": [
+                      {"role": "user", "content": "Hello, world"}
+                  ]
+              }'
+          - lang: python
+            source: |-
+              import anthropic
+
+              anthropic.Anthropic().messages.create(
+                  model="claude-sonnet-4-20250514",
+                  max_tokens=1024,
+                  messages=[
+                      {"role": "user", "content": "Hello, world"}
+                  ]
+              )
+          - lang: javascript
+            source: |-
+              import { Anthropic } from '@anthropic-ai/sdk';
+
+              const anthropic = new Anthropic();
+
+              await anthropic.messages.create({
+                model: "claude-sonnet-4-20250514",
+                max_tokens: 1024,
+                messages: [
+                  {"role": "user", "content": "Hello, world"}
+                ]
+              });
+      response:
+        '200':
+          application/json:
+            schemaArray:
+              - type: object
+                properties:
+                  id:
+                    allOf:
+                      - description: |-
+                          Unique object identifier.
+
+                          The format and length of IDs may change over time.
+                        examples:
+                          - msg_013Zva2CMHLNnXjNJJKqJ2EF
+                        title: Id
+                        type: string
+                  type:
+                    allOf:
+                      - const: message
+                        default: message
+                        description: |-
+                          Object type.
+
+                          For Messages, this is always `"message"`.
+                        enum:
+                          - message
+                        title: Type
+                        type: string
+                  role:
+                    allOf:
+                      - const: assistant
+                        default: assistant
+                        description: |-
+                          Conversational role of the generated message.
+
+                          This will always be `"assistant"`.
+                        enum:
+                          - assistant
+                        title: Role
+                        type: string
+                  content:
+                    allOf:
+                      - description: >-
+                          Content generated by the model.
 
 
-          See our [errors documentation](https://docs.claude.com/en/api/errors)
-          for more details.
-  deprecated: false
-  type: path
+                          This is an array of content blocks, each of which has a
+                          `type` that determines its shape.
+
+
+                          Example:
+
+
+                          ```json
+
+                          [{"type": "text", "text": "Hi, I'm Claude."}]
+
+                          ```
+
+
+                          If the request input `messages` ended with an `assistant`
+                          turn, then the response `content` will continue directly
+                          from that last turn. You can use this to constrain the
+                          model's output.
+
+
+                          For example, if the input `messages` were:
+
+                          ```json
+
+                          [
+                            {"role": "user", "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"},
+                            {"role": "assistant", "content": "The best answer is ("}
+                          ]
+
+                          ```
+
+
+                          Then the response `content` might be:
+
+
+                          ```json
+
+                          [{"type": "text", "text": "B)"}]
+
+                          ```
+                        examples:
+                          - - citations: null
+                              text: Hi! My name is Claude.
+                              type: text
+                        items:
+                          discriminator:
+                            mapping:
+                              bash_code_execution_tool_result: >-
+                                #/components/schemas/ResponseBashCodeExecutionToolResultBlock
+                              code_execution_tool_result: >-
+                                #/components/schemas/ResponseCodeExecutionToolResultBlock
+                              container_upload: '#/components/schemas/ResponseContainerUploadBlock'
+                              mcp_tool_result: '#/components/schemas/ResponseMCPToolResultBlock'
+                              mcp_tool_use: '#/components/schemas/ResponseMCPToolUseBlock'
+                              redacted_thinking: '#/components/schemas/ResponseRedactedThinkingBlock'
+                              server_tool_use: '#/components/schemas/ResponseServerToolUseBlock'
+                              text: '#/components/schemas/ResponseTextBlock'
+                              text_editor_code_execution_tool_result: >-
+                                #/components/schemas/ResponseTextEditorCodeExecutionToolResultBlock
+                              thinking: '#/components/schemas/ResponseThinkingBlock'
+                              tool_use: '#/components/schemas/ResponseToolUseBlock'
+                              web_fetch_tool_result: '#/components/schemas/ResponseWebFetchToolResultBlock'
+                              web_search_tool_result: >-
+                                #/components/schemas/ResponseWebSearchToolResultBlock
+                            propertyName: type
+                          oneOf:
+                            - $ref: '#/components/schemas/ResponseTextBlock'
+                            - $ref: '#/components/schemas/ResponseThinkingBlock'
+                            - $ref: '#/components/schemas/ResponseRedactedThinkingBlock'
+                            - $ref: '#/components/schemas/ResponseToolUseBlock'
+                            - $ref: '#/components/schemas/ResponseServerToolUseBlock'
+                            - $ref: >-
+                                #/components/schemas/ResponseWebSearchToolResultBlock
+                            - $ref: '#/components/schemas/ResponseWebFetchToolResultBlock'
+                            - $ref: >-
+                                #/components/schemas/ResponseCodeExecutionToolResultBlock
+                            - $ref: >-
+                                #/components/schemas/ResponseBashCodeExecutionToolResultBlock
+                            - $ref: >-
+                                #/components/schemas/ResponseTextEditorCodeExecutionToolResultBlock
+                            - $ref: '#/components/schemas/ResponseMCPToolUseBlock'
+                            - $ref: '#/components/schemas/ResponseMCPToolResultBlock'
+                            - $ref: '#/components/schemas/ResponseContainerUploadBlock'
+                        title: Content
+                        type: array
+                  model:
+                    allOf:
+                      - description: The model that handled the request.
+                        examples:
+                          - claude-sonnet-4-20250514
+                        maxLength: 256
+                        minLength: 1
+                        title: Model
+                        type: string
+                  stop_reason:
+                    allOf:
+                      - anyOf:
+                          - enum:
+                              - end_turn
+                              - max_tokens
+                              - stop_sequence
+                              - tool_use
+                              - pause_turn
+                              - refusal
+                              - model_context_window_exceeded
+                            type: string
+                          - type: 'null'
+                        description: >-
+                          The reason that we stopped.
+
+
+                          This may be one the following values:
+
+                          * `"end_turn"`: the model reached a natural stopping point
+
+                          * `"max_tokens"`: we exceeded the requested `max_tokens`
+                          or the model's maximum
+
+                          * `"stop_sequence"`: one of your provided custom
+                          `stop_sequences` was generated
+
+                          * `"tool_use"`: the model invoked one or more tools
+
+                          * `"pause_turn"`: we paused a long-running turn. You may
+                          provide the response back as-is in a subsequent request to
+                          let the model continue.
+
+                          * `"refusal"`: when streaming classifiers intervene to
+                          handle potential policy violations
+
+
+                          In non-streaming mode this value is always non-null. In
+                          streaming mode, it is null in the `message_start` event
+                          and non-null otherwise.
+                        title: Stop Reason
+                  stop_sequence:
+                    allOf:
+                      - anyOf:
+                          - type: string
+                          - type: 'null'
+                        default: null
+                        description: >-
+                          Which custom stop sequence was generated, if any.
+
+
+                          This value will be a non-null string if one of your custom
+                          stop sequences was generated.
+                        title: Stop Sequence
+                  usage:
+                    allOf:
+                      - $ref: '#/components/schemas/Usage'
+                        description: >-
+                          Billing and rate-limit usage.
+
+
+                          Anthropic's API bills and rate-limits by token counts, as
+                          tokens represent the underlying cost to our systems.
+
+
+                          Under the hood, the API transforms requests into a format
+                          suitable for the model. The model's output then goes
+                          through a parsing stage before becoming an API response.
+                          As a result, the token counts in `usage` will not match
+                          one-to-one with the exact visible content of an API
+                          request or response.
+
+
+                          For example, `output_tokens` will be non-zero, even for an
+                          empty string response from Claude.
+
+
+                          Total input tokens in a request is the summation of
+                          `input_tokens`, `cache_creation_input_tokens`, and
+                          `cache_read_input_tokens`.
+                        examples:
+                          - input_tokens: 2095
+                            output_tokens: 503
+                  context_management:
+                    allOf:
+                      - anyOf:
+                          - $ref: '#/components/schemas/ResponseContextManagement'
+                          - type: 'null'
+                        default: null
+                        description: >-
+                          Information about context management strategies applied
+                          during the request
+                  container:
+                    allOf:
+                      - anyOf:
+                          - $ref: '#/components/schemas/Container'
+                          - type: 'null'
+                        default: null
+                        description: >-
+                          Information about the container used in this request.
+
+
+                          This will be non-null if a container tool (e.g. code
+                          execution) was used.
+                title: Message
+                refIdentifier: '#/components/schemas/Message'
+                examples:
+                  - content: &ref_0
+                      - citations: null
+                        text: Hi! My name is Claude.
+                        type: text
+                    id: msg_013Zva2CMHLNnXjNJJKqJ2EF
+                    model: claude-sonnet-4-20250514
+                    role: assistant
+                    stop_reason: end_turn
+                    stop_sequence: null
+                    type: message
+                    usage: &ref_1
+                      input_tokens: 2095
+                      output_tokens: 503
+                requiredProperties:
+                  - id
+                  - type
+                  - role
+                  - content
+                  - model
+                  - stop_reason
+                  - stop_sequence
+                  - usage
+                  - context_management
+                  - container
+                example:
+                  content: *ref_0
+                  id: msg_013Zva2CMHLNnXjNJJKqJ2EF
+                  model: claude-sonnet-4-20250514
+                  role: assistant
+                  stop_reason: end_turn
+                  stop_sequence: null
+                  type: message
+                  usage: *ref_1
+            examples:
+              example:
+                value:
+                  content:
+                    - citations: null
+                      text: Hi! My name is Claude.
+                      type: text
+                  id: msg_013Zva2CMHLNnXjNJJKqJ2EF
+                  model: claude-sonnet-4-20250514
+                  role: assistant
+                  stop_reason: end_turn
+                  stop_sequence: null
+                  type: message
+                  usage:
+                    input_tokens: 2095
+                    output_tokens: 503
+            description: Message object.
+        4XX:
+          application/json:
+            schemaArray:
+              - type: object
+                properties:
+                  error:
+                    allOf:
+                      - discriminator:
+                          mapping:
+                            api_error: '#/components/schemas/APIError'
+                            authentication_error: '#/components/schemas/AuthenticationError'
+                            billing_error: '#/components/schemas/BillingError'
+                            invalid_request_error: '#/components/schemas/InvalidRequestError'
+                            not_found_error: '#/components/schemas/NotFoundError'
+                            overloaded_error: '#/components/schemas/OverloadedError'
+                            permission_error: '#/components/schemas/PermissionError'
+                            rate_limit_error: '#/components/schemas/RateLimitError'
+                            timeout_error: '#/components/schemas/GatewayTimeoutError'
+                          propertyName: type
+                        oneOf:
+                          - $ref: '#/components/schemas/InvalidRequestError'
+                          - $ref: '#/components/schemas/AuthenticationError'
+                          - $ref: '#/components/schemas/BillingError'
+                          - $ref: '#/components/schemas/PermissionError'
+                          - $ref: '#/components/schemas/NotFoundError'
+                          - $ref: '#/components/schemas/RateLimitError'
+                          - $ref: '#/components/schemas/GatewayTimeoutError'
+                          - $ref: '#/components/schemas/APIError'
+                          - $ref: '#/components/schemas/OverloadedError'
+                        title: Error
+                  request_id:
+                    allOf:
+                      - anyOf:
+                          - type: string
+                          - type: 'null'
+                        default: null
+                        title: Request Id
+                  type:
+                    allOf:
+                      - const: error
+                        default: error
+                        enum:
+                          - error
+                        title: Type
+                        type: string
+                title: ErrorResponse
+                refIdentifier: '#/components/schemas/ErrorResponse'
+                requiredProperties:
+                  - error
+                  - request_id
+                  - type
+            examples:
+              example:
+                value:
+                  error:
+                    message: Invalid request
+                    type: invalid_request_error
+                  request_id: <string>
+                  type: error
+            description: >-
+              Error response.
+
+
+              See our [errors documentation](https://docs.claude.com/en/api/errors)
+              for more details.
+      deprecated: false
+      type: path
 components:
   schemas:
     APIError:
