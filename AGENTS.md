@@ -8,7 +8,7 @@
 - Co-locate fixtures and test doubles with the packages they validate; add a shared `internal/testutil` package if reuse emerges.
 
 ## Build, Test, and Development Commands
-- `go build ./...` compiles every package; run it before pushing to catch type breaks.
+- `make` compiles every package; run it before pushing to catch type breaks.
 - `go test ./... -count=1` executes the suite without cache so flaky cases surface early.
 - `go run ./cmd/<service>` boots a local binary; supply environment variables via your shell when needed.
 - `go generate ./...` refreshes OpenAPI bindings after editing `api/api.yaml`.
